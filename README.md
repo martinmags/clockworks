@@ -4,7 +4,7 @@ A web app to display different clock variants at different times around the worl
 
 # Status:
 
-Live
+Live: https://styled-clockworks.netlify.app/
 
 # Pending:
 
