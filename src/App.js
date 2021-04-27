@@ -1,17 +1,20 @@
 import React from 'react';
-import 'Theme';
-
 import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from 'styles/Theme';
+import GlobalStyle from 'styles/GlobalStyles';
+import Heading from 'components/Heading';
+import Container from 'components/Container';
+import AnalogClock from 'components/clocks/AnalogClock';
+
 const App = () => {
   return (
-    <div>
-      <h1>Hello from app</h1>
-      <p>Test</p>
-      <ul>
-        <li>TESTING</li>
-        <li>Testing</li>
-      </ul>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <GlobalStyle />
+      <Container>
+        <Heading title='Clockworks' />
+        <AnalogClock />
+      </Container>
+    </ThemeProvider>
   );
 };
 
