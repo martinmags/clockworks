@@ -1,6 +1,6 @@
 # clockworks
 
-A web app to display different clock variants at different times around the world.
+A web app to display an analog clock using React and styled-components.
 
 # Status:
 
