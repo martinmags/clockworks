@@ -1,20 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import analogclock from './analog-clock-face.png';
 
 const AnalogClock = () => {
+  /* Calculate seconds, minutes, hours initial value */
+  const deg = 6;
+  const [time, setTime] = useState(new Date());
+  const [seconds, setSeconds] = useState(time.getSeconds() * deg);
+  const [minutes, setMinutes] = useState(time.getMinutes() * deg);
+  const [hours, setHours] = useState(time.getHours() * 30 + minutes / 12);
+
+  /* Update time every 1s */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+      setSeconds(time.getSeconds() * deg);
+      setMinutes(time.getMinutes() * deg);
+      setHours(time.getHours() * 30 + minutes / 12);
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [time, seconds, minutes, hours]);
+
   return (
     <Wrapper>
       <ClockFace>
         <img width='350' height='350' src={analogclock} alt='clockface' />
         <Hour>
-          <HourHand />
+          <HourHand time={hours} />
         </Hour>
         <Minute>
-          <MinuteHand />
+          <MinuteHand time={minutes} />
         </Minute>
         <Second>
-          <SecondHand />
+          <SecondHand time={seconds} />
         </Second>
       </ClockFace>
     </Wrapper>
@@ -29,27 +49,7 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-/** Calculate Rotation Animation */
-const deg = 6;
-const day = new Date();
-const minute = day.getMinutes() * deg;
-const second = day.getSeconds() * deg;
-const hour = day.getHours() * 30 + minute / 12 - 360;
-
-/** Animation Keyframe Sequences */
-const hourRotation = keyframes`
-  from { transform: rotate( ${hour}deg); }
-  to { transform: rotate( 360deg ); }
-`;
-const minuteRotation = keyframes`
-  from { transform: rotate(${minute}deg); }
-  to { transform: rotate(360deg); }
-`;
-const secondRotation = keyframes`
-  from { transform: rotate(${second}deg); }
-  to { transform: rotate(360deg); }
-`;
-
+/* Draws and positions the clock face img */
 const ClockFace = styled.div`
   display: flex;
   flex-direction: column;
@@ -82,6 +82,12 @@ const Second = styled.div`
   position: absolute;
 `;
 
+/* Handle Clock animation rotation */
+const rotation = (t) => keyframes`
+  from { transform: rotate( ${t}deg); }
+  to { transform: rotate( 360deg)}
+`;
+
 /* Clock hands */
 const hands = `
   display: flex;
@@ -97,7 +103,7 @@ const HourHand = styled.div`
   ${hands}
   width: 160px;
   height: 160px;
-  animation: ${hourRotation} 3600s linear infinite;
+  animation: ${(props) => rotation(props.time)} 3600s linear infinite;
 
   &:before {
     ${before}
@@ -107,33 +113,35 @@ const HourHand = styled.div`
     z-index: 1;
   }
 `;
-
 const MinuteHand = styled.div`
   ${hands}
   width: 190px;
   height: 190px;
-  animation: ${minuteRotation} 3600s steps(60) infinite;
+  animation: ${(props) => rotation(props.time)} 3600s steps(60) infinite;
 
   &:before {
     ${before}
     width: 4px;
     height: 90px;
-    background-color: white;
+    background-color: ${(props) => props.theme.primaryGray};
     z-index: 2;
   }
 `;
-
 const SecondHand = styled.div`
-  ${hands}
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
   width: 230px;
   height: 230px;
-  animation: ${secondRotation} 60s steps(60) infinite;
+  animation: ${(props) => rotation(props.time)} 60s steps(60) infinite;
 
   &:before {
-    ${before}
+    content: '';
+    position: absolute;
+    border-radius: 6px 6px 0 0;
     width: 2px;
     height: 150px;
-    background-color: white;
+    background-color: ${(props) => props.theme.primaryGray};
     z-index: 3;
   }
 `;

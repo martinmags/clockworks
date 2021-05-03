@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = ({children}) => {
-  return <Wrapper>{children}</Wrapper>
- };
+const Container = ({ children }) => {
+  return <Wrapper>{children}</Wrapper>;
+};
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,8 +11,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-content: center;
   height: 100vh;
-  background-color: ${props => props.theme.backgroundColor};
-
+  background-color: ${(props) => props.theme.backgroundColor};
 `;
 
 export default Container;
